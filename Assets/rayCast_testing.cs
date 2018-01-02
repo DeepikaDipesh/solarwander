@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class rayCast_testing : MonoBehaviour
 {
 
-
 	//define infocanvas
 	public Canvas infoCanvas;
 	public Text name;
@@ -18,9 +17,16 @@ public class rayCast_testing : MonoBehaviour
 	public string pMass;
 	public string pDiameter;
 	public string audiopath;
+
+	public string sDist="Distance: ";
+	public string sMass="Mass: ";
+
 	//define audio data
 	public AudioClip aClip;
 	public AudioSource aSource;
+
+	//define boolean to prevent playing audio when starting the game
+	public bool firstTime;
 
 	//load data
 	public void LoadData (string currentPlanet)
@@ -31,69 +37,70 @@ public class rayCast_testing : MonoBehaviour
 			pDistance = "5778Kelvin";
 			pMass = "333000Earth";
 			pDiameter = "1.39 million Km";
-			audiopath = "";
+			audiopath = "Sun";
 			break;
 		case "MercuryMain":
 			pName = "Mercury";
 			pDistance = "0.38AU";
 			pMass = "0.55Earth";
 			pDiameter = "4878Km";
-			audiopath = "mercury";
+			audiopath = "Mercury";
 			break;
 		case "VenusMain":
 			pName = "Venus";
 			pDistance = "0.72AU";
 			pMass = "0.815Earth";
 			pDiameter = "12103.6km";
-			audiopath = "venus";
+			audiopath = "Venus";
 			break;
 		case "EarthMain":
 			pName = "Earth";
 			pDistance = "1AU";
 			pMass = "5.965*10^24Kg";
 			pDiameter = "12756.3km";
-			audiopath = "";
+			audiopath = "Earth";
 			break;
 		case "MarsMain":
 			pName = "Mars";
 			pDistance = "1.52AU";
 			pMass = "0.107Earth";
 			pDiameter = "6794km";
-			audiopath = "mars";
+			audiopath = "Mars";
 			break;
 		case "JupiterMain":
 			pName = "Jupiter";
 			pDistance = "5.20AU";
 			pMass = "318Earth";
 			pDiameter = "142984km";
-			audiopath = "jupiter";
+			audiopath = "Jupiter";
 			break;
 		case "SaturnMain":
 			pName = "Saturn";
 			pDistance = "9.54AU";
 			pMass = "95Earth";
 			pDiameter = "120536km";
-			audiopath = "saturn";
+			audiopath = "Saturn";
 			break;
 		case "TitanMain":
 			pName = "Titan";
 			pDistance = "Moon of Saturn";
 			pMass = "1.8Moon";
 			pDiameter = "5151km";
-			audiopath = "";
+			audiopath = "Titan";
 			break;
 		case "UranusMain":
 			pName = "Urnaus";
 			pDistance = "19.218AU";
 			pMass = "14Earth";
 			pDiameter = "51120km";
+			audiopath = "Uranus";
 			break;
 		case "NeptuneMain":
 			pName = "Neptune";
 			pDistance = "30.96AU";
 			pMass = "17Earth";
 			pDiameter = "49528km";
-			audiopath = "";
+			audiopath = "Neptune";
 			break;
 		default:
 			pName = "";
@@ -104,7 +111,7 @@ public class rayCast_testing : MonoBehaviour
 			break;
 		}
 		name.text = pName;
-		distance.text = pDistance;
+		distance.text = sDist+ pDistance;
 		mass.text = pMass;
 		diameter.text = pDiameter;
 		aClip = Resources.Load<AudioClip> (audiopath);
@@ -134,6 +141,7 @@ public class rayCast_testing : MonoBehaviour
 		mass = GameObject.Find ("mass").GetComponent<Text> ();
 		diameter = GameObject.Find ("diameter").GetComponent<Text> ();
 		aSource = GameObject.Find ("audioguide").GetComponent<AudioSource> ();
+		firstTime = true;
 	}
 
 	// Update is called once per frame
@@ -143,7 +151,7 @@ public class rayCast_testing : MonoBehaviour
 		RaycastHit hit;
 		float theDistance;
 		float range = 500f;
-	
+
 		//forward = object's forward direction with the speed of 8
 		Vector3 forward = transform.TransformDirection (Vector3.forward) * 20;
 
@@ -167,7 +175,13 @@ public class rayCast_testing : MonoBehaviour
 			//tell knowledge
 			infoCanvas.enabled = true;
 			LoadData(hit.collider.gameObject.name);
-			PlayAudio();
+				if(firstTime == true && hit.collider.gameObject.name == "EarthMain"){
+					StopAudio();
+				}
+				else {
+					firstTime = false;
+					PlayAudio();
+				}
 		} else {
 			GameObject.Find ("CenterOfGravity_mercury").GetComponent<Mercury_CenterOfGravity> ().enabled = true;
 			GameObject.Find ("CenterOfGravity_venus").GetComponent<Venus_CenterOfGravity> ().enabled = true;
