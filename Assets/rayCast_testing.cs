@@ -17,6 +17,10 @@ public class rayCast_testing : MonoBehaviour
 	public string pMass;
 	public string pDiameter;
 	public string audiopath;
+
+	public string sDist="Distance: ";
+	public string sMass="Mass: ";
+
 	//define audio data
 	public AudioClip aClip;
 	public AudioSource aSource;
@@ -107,7 +111,7 @@ public class rayCast_testing : MonoBehaviour
 			break;
 		}
 		name.text = pName;
-		distance.text = pDistance;
+		distance.text = sDist+ pDistance;
 		mass.text = pMass;
 		diameter.text = pDiameter;
 		aClip = Resources.Load<AudioClip> (audiopath);
